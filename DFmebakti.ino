@@ -1,120 +1,114 @@
-/* kodingan ini dibuat dan dikembangkan dari penggabungan dan penambahan fungsi tmbahan baru dari penulis
- *  
- *  PROJECT PRNGINGAT SEMBAHYANG OTOMATIS 
- *  Develop by : CorpseLily(Made agus andi gunawan)
- *  
+/* 
+ *  kodingan ini dibuat dan dikembangkan dari penggabungan dan penambahan fungsi tmbahan baru dari penulis
+ *  Project Name : PROJECT PENGINGAT SEMBAHYANG OTOMATIS 
+ *  Develop by : IDNmakerspace Algorithm Factory
+ *  Last Edited : Jum'at, 29 Januari 2021
  */
  
+#include <DS1307RTC.h>
+#include <RTClib.h>
 #include <Wire.h>
 #include <Time.h>
 #include <TimeLib.h>
-#include <DS1307RTC.h>
 #include <SoftwareSerial.h>  
 #include <DFPlayer_Mini_Mp3.h>
-#include <RTClib.h>
 
-int RelayPin = 3;
-int LedPin = 5;
-SoftwareSerial mySerial(10, 11);
+SoftwareSerial dfplayer(10, 11);
 RTC_DS1307 rtc;
 
+int RelayPin = 7;
+int LedPin = 13;
 char namaHari[7][12] = {"Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"};
 
 void setup()
 {
   Serial.begin(9600);
-  delay(200);
-  pinMode(RelayPin,OUTPUT);  
-  pinMode(LedPin,OUTPUT);  
-    digitalWrite(LedPin,HIGH);    //kondisi lampu indikator hidup
-  delay(1000);
-    digitalWrite(LedPin,LOW);     //kondisi lampu indikator mati
-  delay(1000);
-    digitalWrite(LedPin,HIGH);    //kondisi lampu indikator hidup
-  delay(1000);
-   digitalWrite(RelayPin, HIGH);
-   delay(1000);
+  dfplayer.begin(9600);
+  rtc.begin();
+  
+  pinMode(RelayPin, OUTPUT);  
+  pinMode(LedPin, OUTPUT);
 
-  Serial.begin(9600);
-  if (! rtc.begin()) {
-    Serial.println("RTC TIDAK TERBACA");
-    while (1);
-  }
+  digitalWrite(LedPin,HIGH);    //kondisi lampu indikator hidup
+  delay(1000);
+  digitalWrite(RelayPin, HIGH); //on
+  delay(1000);
+  digitalWrite(RelayPin, LOW);  //off
+  delay(1000);
 
-  if (! rtc.isrunning()) {
-    Serial.println("RTC is NOT running!");
-    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));//update rtc dari waktu komputer
-  }
-  Serial.begin (9600);
-mySerial.begin (9600);
-mp3_set_serial (mySerial);
-delay(10);
-mp3_set_volume (15);
-delay(10);
-mp3_play (1);
-delay(10);
+  //set DFplayer
+  mp3_set_serial(dfplayer);
+  delay(10);
+  mp3_set_volume(100);
+  delay(10);
+  mp3_play (1);
+  delay(10);
 }
 
 void loop() 
 {
- DateTime now = rtc.now();
-    Serial.print(namaHari[now.dayOfTheWeek()]);  
-    Serial.print(',');    
-    Serial.print(now.day(), DEC);
-    Serial.print('/');
-    Serial.print(now.month(), DEC);
-    Serial.print('/');
-    Serial.print(now.year(), DEC);
-    Serial.print(" ");   
-    Serial.print(now.hour(), DEC);
-    Serial.print(':');
-    Serial.print(now.minute(), DEC);
-    Serial.print(':');
-    Serial.print(now.second(), DEC);
-    Serial.println();
-   
-    delay(1000);
-
-      if (now.hour() == 6 && now.minute() == 0)   // untuk sembahyang pagi
-  { 
-    digitalWrite(RelayPin, LOW);
-    Serial.print("Hidup...");
-    mp3_play ();
-    delay(10);
-  }
-    else if (now.hour() == 6 && now.minute() == 5)
-    {   
-    digitalWrite(RelayPin, HIGH);
-    Serial.print("Mati...");
-    }
-    delay(1000);
-    if (now.hour() == 12 && now.minute() == 0)   //untuk sembahyang siang
-  { 
-    digitalWrite(RelayPin, LOW);
-    Serial.print("Hidup...");
-    mp3_play ();
-    delay(10);
-  }
-    else if (now.hour() == 12 && now.minute() == 5)
-    {   
-    digitalWrite(RelayPin,HIGH);
-    Serial.print("Mati...");
-    }
+  DateTime now = rtc.now();
+  Serial.print(namaHari[now.dayOfTheWeek()]);  
+  Serial.print(',');    
+  Serial.print(now.day(), DEC);
+  Serial.print('/');
+  Serial.print(now.month(), DEC);
+  Serial.print('/');
+  Serial.print(now.year(), DEC);
+  Serial.print(" ");   
+  Serial.print(now.hour(), DEC);
+  Serial.print(':');
+  Serial.print(now.minute(), DEC);
+  Serial.print(':');
+  Serial.print(now.second(), DEC);
+  Serial.println();
   delay(1000);
-  if (now.hour() == 18 && now.minute() == 0)    //untuk sembahyang malam
+
+  if (now.hour() == 6 && now.minute() == 0)   // untuk sembahyang pagi
   { 
-    digitalWrite(RelayPin, LOW);
+    digitalWrite(RelayPin, HIGH);
     Serial.print("Hidup...");
     mp3_play ();
     delay(10);
   }
-    else if (now.hour() == 18 && now.minute() == 5)
-    {   
-    digitalWrite(RelayPin,HIGH);
+  else if (now.hour() == 6 && now.minute() == 7)
+  {   
+    digitalWrite(RelayPin, LOW);
     Serial.print("Mati...");
-    }
+  }
+  delay(1000);
+
+  //untuk sembahyang siang
+  if (now.hour() == 12 && now.minute() == 0)   //untuk sembahyang siang
+  { 
+    digitalWrite(RelayPin, HIGH);
+    Serial.print("Hidup...");
+    mp3_play ();
+    delay(10);
+  }
+  else if (now.hour() == 12 && now.minute() == 7)
+  {   
+    digitalWrite(RelayPin,LOW);
+    Serial.print("Mati...");
+  }
+  delay(1000);
+
+  //untuk sembahyang malam
+  if (now.hour() == 18 && now.minute() == 0)  //untuk sembahyang malam
+  { 
+    digitalWrite(RelayPin, HIGH);
+    Serial.print("Hidup...");
+    mp3_play ();
+    delay(10);
+  }
+  else if (now.hour() == 18 && now.minute() == 7)
+  {   
+    digitalWrite(RelayPin,LOW);
+    Serial.print("Mati...");
+  }
   delay(1000);
 }
+
 void time(int number) 
 {
   if (number >= 0 && number < 10)
@@ -122,5 +116,24 @@ void time(int number)
     Serial.write('0');
   }
   Serial.print(number);
+}
+
+void kalibrasi()
+{ 
+  DateTime now = rtc.now();
+  now.day()    = 21;       //atur tanggal
+  now.month()  = 8;      //atur bulan
+  now.year()   = 2;      //atur tahun
+  now.hour()   = 7;      //atur jam
+  now.minute() = 55;      //atur menit
+  now.second() = 1;      //atur detik
+  rtc.write(now); 
+  
+  Serial.print("Waktu telah di atur ke: ");
+  rtc.printTo(Serial);
+  Serial.println();
+  
+  Serial.print("Program berakhir (RESET untuk menjalakan lagi)");
+  while(1);
 }
   
