@@ -1,18 +1,10 @@
-# pengingat-sembahyang
-code ini digunakan untuk arduino dengan DFPlayer, dan RTC module
+# Smart Balinese (HINDUISM) Prayer Warning System
 
-gunakan kode ini dengan bijak dan baik karena program ini hanya pengembangan dari beberapa kode yang saya kolaborasikan untuk menajadi fungsi yang lebih fungsional
+Code ini digunakan untuk arduino membuat sistem pengingat ibadah sembahyang umat hindu.
 
-=====================================================================================================================================
-=====================================================================================================================================
+Perangkat tersebut dibuat dengan module hardware sebagai berikut antara lain Arduino uno, Relay, DFPlayer, dan RTC module.
 
-
-DIRECT by : CORPSE LILY
-
-
-====================================================================================================================================
-====================================================================================================================================
-
+Gunakan kode ini dengan bijak dan baik karena program ini hanya pengembangan dari beberapa kode yang saya kolaborasikan untuk menajadi fungsi yang lebih fungsional.
 
 Project ini bisa teman, kembangkan ke lebih advanced menggunakan inputan tombol maupun lcd penampil waktu untuk dapat user menghinputkan langsung waktu kalibrasi, saat ini dalam pengembangan menuju ke project versi IoT(Internet of Things) agar pewaktu dapat kalibrasi otomatis mengikuti dengan sistem jam GMT.
 
